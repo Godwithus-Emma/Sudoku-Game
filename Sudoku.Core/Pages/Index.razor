@@ -1,0 +1,99 @@
+﻿@inherits BasePage
+@page "/Game"
+<div class="gamepage">
+    <div class="wrap">
+    <div class="head">
+        <h1 class="title">@Title</h1> 
+        <div><i class ="mdi mdi-keyboard-backspace" id="home-btn" @onclick="@End"></i></div>
+        <div class="timer">
+                <h5>State: @engine.GameState</h5>
+            @{ var time = engine.TimeUsed; }
+            @if (time != null)
+            {
+                <h5 class="time">@time.Value.Hours.ToString("00"):@time.Value.Minutes.ToString("00"):@time.Value.Seconds.ToString("00")</h5>
+
+            }
+             else
+            { 
+                @if (engine.GameOver == true)
+                {
+                    <h5 class="time">Game Over!!!</h5>   
+                }
+            }
+        </div>
+     </div>
+    <div class="game">
+        <div class="board">
+            <table>
+                @for (int i = 0; i < engine.CellsCount; i++)
+                {
+                    <tr>
+                        @for (int ii = 0; ii < engine.CellsCount; ii++)
+                        {
+                            var row = i;
+                            var col = ii;
+
+                            @if (engine.Cells[row][col].Fixed)
+                            {
+                                <td tabindex="-1" class= "fixed">
+                                    @(engine[row, col])
+                                </td>
+                            }
+                            else
+                            {
+                                <td @onclick="()=>Focused(row, col)" tabindex="-1">
+                                    @(engine[row, col])
+                                </td>
+                            }
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="keypad">
+            @for (int i = 0; i < engine.CellsCount; i++)
+            {
+                var _i = i;
+                <button disabled="@(focused==false)" class="keys" @onclick="()=>Keypress(_i+1)">@(i+1)</button>
+            }
+             <button disabled="@(focused==false)" class="keys bright" @onclick="()=>Keypress(0)">Del</button>
+        </div>
+        <div class="function">
+            @if (engine.GameState != GameState.Stopped)
+            {
+            <button class="play-pause mybtn" @onclick="PlayPause">@(engine.GameState == GameState.Paused ? "Play" : "Pause")</button>
+            <button class="endgame mybtn" @onclick="TryEnd">End</button>
+            }
+            else{
+            <button class="new-game mybtn" @onclick="engine.StartGame">Start</button>
+            }
+             <i class="reload mdi mdi-reload" @onclick="Reload"></i>
+        </div>
+        @if (confirm)
+        {
+            <div class="mask" @onclick="DonNotEnd">
+                <div class="@(wait==false? "clear": "pop" ) wrap ">
+                     <span>Are you sure?</span>
+                    <div class="box">
+                        <span class="confirm no" @onclick="DonNotEnd">No</span>
+                        <span class="confirm yes" @onclick="End">Yes</span>
+                    </div>
+                </div>
+            </div>
+        }
+        @*@foreach(var i in engine.Intervals)
+        {
+        <div>@i</div>
+        }*@
+    </div>
+    @if (engine.Error != null )
+    {
+        @if (engine.GameOver == false)
+        {
+        <div class="info">
+            @engine.Error
+        </div>
+         }
+     }
+     </div>
+</div>

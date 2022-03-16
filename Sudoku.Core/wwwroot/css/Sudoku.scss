@@ -1,0 +1,36 @@
+﻿@import 'ColorStyles.scss';
+
+@media screen and (max-width: 768px){
+    .display{
+        width:100vw;
+    }
+}
+@media screen and (min-width: 768px) {
+    .stack {
+        width: 70vw;
+    }
+}
+
+body{
+    margin:0;
+}
+button{
+    border:none;
+}
+h1, h2, h3, h4, h5 {
+    margin:0;
+}
+.f-screen {
+    height: 100vh;
+    padding: 10px;
+    background-color: $primarycolour;
+}
+.flex {
+    display: flex;
+    flex-direction: column;
+}
+
+@import '../../Pages/Index.razor.scss';
+@import '../../Pages/LandingPage.razor.scss';
+@import '../../Pages/LevelCompleted.razor.scss';
+@import '../../Pages/LevelTimeOut.razor.scss';
